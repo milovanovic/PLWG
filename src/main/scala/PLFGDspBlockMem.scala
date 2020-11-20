@@ -376,6 +376,34 @@ class PLFGDspBlockMem [T <: Data : Real: BinaryRepresentation] (csrAddress: Addr
 }    
 
 
+trait AXI4Block extends DspBlock[
+  AXI4MasterPortParameters,
+  AXI4SlavePortParameters,
+  AXI4EdgeParameters,
+  AXI4EdgeParameters,
+  AXI4Bundle] {
+    def standaloneParams = AXI4BundleParameters(addrBits = 64, dataBits = 64, idBits = 1)
+    val ioMem = mem.map { m => {
+      val ioMemNode = BundleBridgeSource(() => AXI4Bundle(standaloneParams))
+
+      m :=
+      BundleBridgeToAXI4(AXI4MasterPortParameters(Seq(AXI4MasterParameters("bundleBridgeToAXI4")))) :=
+      ioMemNode
+
+      val ioMem = InModuleBody { ioMemNode.makeIO() }
+      ioMem
+    }}
+
+    val ioOutNode = BundleBridgeSink[AXI4StreamBundle]()
+
+    ioOutNode :=
+    AXI4StreamToBundleBridge(AXI4StreamSlaveParameters()) :=
+    streamNode
+
+    val out = InModuleBody { ioOutNode.makeIO() }
+
+}
+
 
 object PLFGDspBlockMemApp extends App
 {

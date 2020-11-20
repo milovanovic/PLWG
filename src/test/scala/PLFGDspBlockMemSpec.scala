@@ -16,7 +16,6 @@ import freechips.rocketchip.tilelink._
 import chisel3.iotesters.Driver
 import chisel3.iotesters.PeekPokeTester
 import org.scalatest.{FlatSpec, Matchers}
-import nco._
 
 
 class PLFGDspBlockMemTester
