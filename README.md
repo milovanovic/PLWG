@@ -1,6 +1,8 @@
 Piecewise Linear Function Generator (PLFG) Chisel Generator
 ========================================================
 
+[![Build Status](https://travis-ci.org/milovanovic/nco.svg?branch=master)](https://travis-ci.org/milovanovic/plfg)
+
 ## Overview
 This repository contains a generator of a parametrizable piecewise linear function waveform generator with various options regarding output signals, written in [Chisel](http://www.chisel-lang.org) hardware design language.
 Piecewise linear function generator can be used in various digital systems, e.g. for sourcing NCO in order to generate
