@@ -105,6 +105,15 @@ registers containing ordinal number of chirps defined in memory for every chirp 
 |     Ordinal number of the N-th chirp on the output    | (6 + `maxChirpOrdinalNum` + `maxNumOfDifferentChirps` + N - 1) \* `beatBytes` |  `chirpOrdinalNumWidth`  |
 |                         ...                           |                                       ...                                     |            ...           |
 
+## Tests
+
+Besides main source code, this repository provides a couple of tests used to check if generated PLFG modules are working properly. To run a test written in Scala simulation environment, user should execute the 
+following command: `testOnly plfg.testNameSpec` where `plfg.testNameSpec` stands for a group of tests named testNameSpec inside plfg package. These tests, as well as the other structures needed for running them, are 
+located in `src/test/scala` directory in following files:
+- `PLFGTesterUtil.scala` - contains functions used for generating Scala values for piecewise linear functions
+- `PLFGSpec.scala` - used for comparing output values of generated PLFG module with Scala values. Can be run using `testOnly plfg.PLFGSpec` command
+- `PLFGDspBlockMemSpec.scala` - used for generating various outputs of PLFG modules. Can be run using `testOnly plfg.PLFGDspBlockMemSpec` command
+
 
 ## Example
 
