@@ -89,19 +89,19 @@ class PLFGDspBlockMemTester
   step(1)
   memWriteWord(csrAddress.base + repeatedChirpNumsArrayOffset + beatBytes, 4)
   step(1)
-  memWriteWord(csrAddress.base + chirpOrdinalNumsArrayOffset + beatBytes, 0)
+  memWriteWord(csrAddress.base + chirpOrdinalNumsArrayOffset + beatBytes, 0) //0
   step(1)
   memWriteWord(csrAddress.base + repeatedChirpNumsArrayOffset + 2*beatBytes, 1)
   step(1)
-  memWriteWord(csrAddress.base + chirpOrdinalNumsArrayOffset + 2*beatBytes, 2)
+  memWriteWord(csrAddress.base + chirpOrdinalNumsArrayOffset + 2*beatBytes, 2) //2
   step(1)
   memWriteWord(csrAddress.base + repeatedChirpNumsArrayOffset + 3*beatBytes, 5)
   step(1)
-  memWriteWord(csrAddress.base + chirpOrdinalNumsArrayOffset + 3*beatBytes, 1)
+  memWriteWord(csrAddress.base + chirpOrdinalNumsArrayOffset + 3*beatBytes, 1) //1
   step(1)
   memWriteWord(csrAddress.base + repeatedChirpNumsArrayOffset + 4*beatBytes, 2)
   step(1)
-  memWriteWord(csrAddress.base + chirpOrdinalNumsArrayOffset + 4*beatBytes, 3)
+  memWriteWord(csrAddress.base + chirpOrdinalNumsArrayOffset + 4*beatBytes, 3) //3
   step(1)
   
   

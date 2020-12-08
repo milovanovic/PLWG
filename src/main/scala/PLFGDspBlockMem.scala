@@ -142,11 +142,12 @@ class PLFGDspBlockMem [T <: Data : Real: BinaryRepresentation] (csrAddress: Addr
     val framePauseCounter = RegInit(UInt(6.W), 0.U)
     val end = RegInit(Bool(), false.B)
     
-    val samplesCounter2 = RegNext(samplesCounter)
-    val segmentCounter2 = RegNext(segmentCounter)
-    val frameCounter2 = RegNext(frameCounter)
-    val framePauseCounter2 = RegNext(framePauseCounter)
-    val end2 = RegInit(Bool(), false.B)
+    val samplesCounter2 = RegNext(RegNext(samplesCounter, 0.U), 0.U)
+    val segmentCounter2 = RegNext(RegNext(segmentCounter, 0.U), 0.U)
+    val frameCounter2 = RegNext(RegNext(frameCounter, 0.U), 0.U)
+    val framePauseCounter2 = RegNext(RegNext(framePauseCounter, 0.U), 0.U)
+    //val end2 = RegInit(Bool(), false.B)
+    val end2 = RegNext(RegNext(end, false.B), false.B)
 
     val repeatedChirpsCounter = RegInit(UInt(params.repeatedChirpNumWidth.W), 0.U)
     val differentChirpsCounter = RegInit(UInt(params.differentChirpNumWidth.W), 0.U)
@@ -215,7 +216,7 @@ class PLFGDspBlockMem [T <: Data : Real: BinaryRepresentation] (csrAddress: Addr
     
     
     val chirpIndex = Wire(UInt(params.chirpOrdinalNumWidth.W))
-    val enable2 = RegNext(enable)
+    val enable2 = RegNext(RegNext(enable, false.B), false.B)
     val chirpIndexOld = RegNext(chirpIndex)
     val started = RegInit(false.B)
     val outReady = RegInit(Bool(), false.B)
@@ -297,17 +298,17 @@ class PLFGDspBlockMem [T <: Data : Real: BinaryRepresentation] (csrAddress: Addr
     }.otherwise{
       when(enable2 && out.ready && !end2){
         started := true.B
-        when((samplesCounter2 + 1.U) >= numsOfSamples){
+        when((samplesCounter2 + 1.U) >= RegNext(numsOfSamples, 0.U)){
           when(((segmentCounter2 + 1.U) >= segmentNums(chirpIndexOld))) {
             currentVal := startingPoint.asTypeOf(params.protoOut)
             when((repeatedChirpsCounter2 + 1.U) >= repeatedChirpNums(differentChirpsCounter)){
               when((differentChirpsCounter2 + 1.U) >= differentChirpsNum){
                 when(frameNum === zero.asTypeOf(UInt(params.frameNumWidth.W))){
-                  end2 := false.B
+                  //end2 := false.B
                   currentVal := startingPoint.asTypeOf(params.protoOut)
                 }.otherwise{
                   when(frameCounter2 >= frameNum){
-                    end2 := true.B
+                    //end2 := true.B
                     currentVal := startingPoint.asTypeOf(params.protoOut)
                   }.otherwise{
                     currentVal := startingPoint.asTypeOf(params.protoOut)
@@ -342,14 +343,27 @@ class PLFGDspBlockMem [T <: Data : Real: BinaryRepresentation] (csrAddress: Addr
     }
     
     when (out.ready) {
-      out.valid := enable2 && !RegNext(end)
+      out.valid := enable2 && !end2//!RegNext(end)
       //out.valid := RegNext(enable2) && !RegNext(end)
     }.otherwise {
       out.valid := out.ready
     }
     val lastOut = Wire(Bool())
     val lastOutReg = RegInit(Bool(), false.B)
-    when(end && !RegNext(end)){
+    
+    when(RegNext(end) && !end2){
+      lastOut := true.B
+    }.otherwise{
+      lastOut := false.B
+    }
+    when(RegNext(end) && !end2 && !out.ready){
+      lastOutReg := true.B
+    }.elsewhen(out.ready && end2){
+      lastOutReg := false.B
+    }
+    out.bits.last := Mux(out.ready, (lastOut || lastOutReg), false.B)
+    
+    /*when(end && !RegNext(end)){
       lastOut := true.B
     }.otherwise{
       lastOut := false.B
@@ -359,7 +373,7 @@ class PLFGDspBlockMem [T <: Data : Real: BinaryRepresentation] (csrAddress: Addr
     }.elsewhen(out.ready && RegNext(end)){
       lastOutReg := RegNext(false.B)
     }
-    out.bits.last := Mux(out.ready, (lastOut || lastOutReg), false.B)
+    out.bits.last := Mux(out.ready, (lastOut || lastOutReg), false.B)*/
 
     
     when(!reset_bit) {
@@ -401,7 +415,6 @@ trait AXI4Block extends DspBlock[
     streamNode
 
     val out = InModuleBody { ioOutNode.makeIO() }
-
 }
 
 

@@ -49,10 +49,10 @@ class PLFGTester
   
   step(5)
   
-  val expectedVals1 = rampPLFG(0, 25, 2)
+  val expectedVals1 = rampPLFG(0, 24, 2)
   val expectedVals2 = constantPLFG(0, 6)
   val expectedVals3 = trianglePLFG(10, 32, 20, 10, 8)
-  val expectedDepth1 = 25
+  val expectedDepth1 = 24
   val expectedDepth2 = 6
   val expectedDepth3 = 52
   slave.addExpects((0 until expectedDepth1).map(x => AXI4StreamTransactionExpect(data = Some(expectedVals1(x)))))
