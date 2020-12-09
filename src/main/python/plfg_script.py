@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 # -*- coding: utf-8 -*-
 """
 Created on Mon Dec  7 17:56:50 2020
