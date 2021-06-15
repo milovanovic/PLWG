@@ -109,7 +109,7 @@ class PLFGDspBlockMem [T <: Data : Real: BinaryRepresentation] (csrAddress: Addr
     val numberOfElements = params.maxChirpOrdinalNum * params.maxNumOfSegments
     val widthOfFields = params.outputWidthInt + params.maxNumOfSamplesWidth + 2
     
-    val configParamsMem1 = SyncReadMem(numberOfElements, UInt(widthOfFields.W))
+    val configParamsMem1 = Mem(numberOfElements, UInt(widthOfFields.W))
     
     val r_addr = Wire(UInt(log2Ceil(numberOfElements).W))
     
@@ -162,7 +162,7 @@ class PLFGDspBlockMem [T <: Data : Real: BinaryRepresentation] (csrAddress: Addr
     val repeatedChirpNums = RegInit(VecInit(Seq.fill(params.maxNumOfDifferentChirps)(zero.asTypeOf(UInt(params.repeatedChirpNumWidth.W)))))
     val chirpOrdinalNums = RegInit(VecInit(Seq.fill(params.maxNumOfDifferentChirps)(zero.asTypeOf(UInt(params.chirpOrdinalNumWidth.W)))))
     
-    val dataFromMem = Wire(UInt(widthOfFields.W))
+    val dataFromMem = Reg(UInt(widthOfFields.W))
     dataFromMem := (configParamsMem1(r_addr))
     
     val point1 = params.outputWidthInt + params.maxNumOfSamplesWidth + 2
