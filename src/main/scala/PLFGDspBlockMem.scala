@@ -234,6 +234,9 @@ class PLFGDspBlockMem [T <: Data : Real: BinaryRepresentation] (csrAddress: Addr
       out.bits.data := startingPoint
       out.bits.last := end
       chirpIndex := 0.U
+      
+      end := false.B
+      started := false.B
 
       repeatedChirpsCounter := 0.U
       differentChirpsCounter := 0.U
